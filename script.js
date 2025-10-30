@@ -1,5 +1,6 @@
 let bucketList = JSON.parse(localStorage.getItem("bucketList")) || [];
 let filterCategory="All";
+let editIndex=null;
 //after click additem button this function execute
 function addItem() {
   const description = document.getElementById("achieve").value;
@@ -8,10 +9,19 @@ function addItem() {
   /* console.log("description",description);
      console.log("category",category);
       console.log("targetDate",date); */
-  bucketList.push({ description, category, date, completed: false });
-  localStorage.setItem("bucketList", JSON.stringify(bucketList));
+      if(description && category &&date){
+        if(editIndex!==null){
+          bucketList[editIndex]={ description, category, date, completed: bucketList[editIndex].completed}
+          editIndex=null;
+        }else{
+           bucketList.push({ description, category, date, completed: false });
+        }
+ localStorage.setItem("bucketList", JSON.stringify(bucketList));
   clearInputFields();
   updateUI();
+      }else{
+        alert("Please fill the fields")
+      }
 }
 function updateUI() {
   const displayList = document.getElementById("displayList");
@@ -75,5 +85,11 @@ function clearInputFields() {
 function filterItems(category){
   filterCategory=category;
   updateUI();
+}
+function editItem(indexvalue){
+  const description = document.getElementById("achieve").value=bucketList[indexvalue].description;
+  const category = document.getElementById("category").value=bucketList[indexvalue].category
+  const date = document.getElementById("target-date").value=bucketList[indexvalue].date;
+editIndex=indexvalue;
 }
 updateUI();
